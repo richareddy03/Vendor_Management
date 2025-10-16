@@ -33,6 +33,7 @@ const fteMenuItems = [
   { title: "Offboarding Request", url: "/offboarding", icon: UserMinus },
   { title: "Rate Card Review", url: "/rate-card", icon: FileText },
   { title: "Interview", url: "/interview", icon: Calendar },
+  { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   // { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
   // { title: "Video Verification", url: "/video-verification", icon: Calendar },
 ];
@@ -42,7 +43,7 @@ const businessDeskMenuItems = [
   { title: "Approval Inbox", url: "/approval-inbox", icon: CheckSquare },
   { title: "Rate Card Review", url: "/business-rate-card", icon: FileText },
   { title: "Budget Management", url: "/budget-management", icon: DollarSign },
-  { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
+  // { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   { title: "Request Tracking", url: "/business-request-tracking", icon: ListChecks },
 ];
 
