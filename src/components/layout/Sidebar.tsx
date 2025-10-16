@@ -28,13 +28,13 @@ import { toast } from "sonner";
 
 const fteMenuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Onboarding", url: "/onboarding", icon: UserPlus },
-  { title: "Replacement", url: "/replacement", icon: RefreshCw },
-  { title: "Offboarding", url: "/offboarding", icon: UserMinus },
+  { title: "Onboarding Request", url: "/onboarding", icon: UserPlus },
+  { title: "Replacement Request", url: "/replacement", icon: RefreshCw },
+  { title: "Offboarding Request", url: "/offboarding", icon: UserMinus },
   { title: "Rate Card Review", url: "/rate-card", icon: FileText },
   { title: "Interview", url: "/interview", icon: Calendar },
-  { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
-  { title: "Video Verification", url: "/video-verification", icon: Calendar },
+  // { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
+  // { title: "Video Verification", url: "/video-verification", icon: Calendar },
 ];
 
 const businessDeskMenuItems = [
