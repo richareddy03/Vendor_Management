@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, UserPlus, RefreshCw, UserMinus, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const stats = [
   {
@@ -59,11 +61,17 @@ const recentRequests = [
     type: "Offboarding",
     vendor: "DataVendor Co.",
     status: "Completed",
-    date: "2025-01-12",
+    date: "2025-07-12",
   },
 ];
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleViewRequests = () => {
+    navigate("/request-tracking");
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -91,8 +99,16 @@ export default function Dashboard() {
 
       {/* Recent Requests Table */}
       <Card className="shadow-material-md">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Recent Requests</CardTitle>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleViewRequests}
+            aria-label="View all requests"
+          >
+            View Requests
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
