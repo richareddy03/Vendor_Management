@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -19,9 +20,11 @@ import {
   Inbox,
   CheckCircle,
   UserX,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const fteMenuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -55,6 +58,7 @@ const vendorMenuItems = [
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState("fte-lead");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("vomsUser");
@@ -70,6 +74,12 @@ export function Sidebar() {
       : userRole === "vendor"
       ? vendorMenuItems
       : fteMenuItems;
+
+  const handleLogout = () => {
+    localStorage.removeItem("vomsUser");
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
 
   return (
     <>
@@ -127,13 +137,25 @@ export function Sidebar() {
                   </NavLink>
                 </li>
               ))}
+              
             </ul>
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-sidebar-border">
+          <div className="p-4 ">
+            <button
+                  onClick={handleLogout}
+                  style={{color : "red", }}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-base w-full text-left",
+                    "text-sidebar-foreground hover:bg-red-100"
+                  )}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
             <p className="text-xs text-muted-foreground text-center">
-              © 2025 VMS v1.0
+              {/* © 2025 VMS v1.0 */}
             </p>
           </div>
         </div>
