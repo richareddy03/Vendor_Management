@@ -192,9 +192,9 @@ export default function ScheduleInterview() {
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
             <ul className="list-disc list-inside space-y-1">
-              <li>No Interview Type or Attendees field - simplified flow</li>
+              {/* <li>No Interview Type or Attendees field - simplified flow</li>
               <li>Time Slot is a dropdown selection only (not manual input)</li>
-              <li>Date picker has minimum date set to today</li>
+              <li>Date picker has minimum date set to today</li> */}
               <li>Interview summary preview appears when date and time are selected</li>
               <li>Confirmation modal displays recipients and interview details</li>
               <li>Upon confirmation, invites are sent to FTE Lead and Candidate</li>
