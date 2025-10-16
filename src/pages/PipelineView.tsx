@@ -96,7 +96,7 @@ export default function PipelineView() {
   );
 
   const KanbanColumn = ({ title, requests, count }: { title: string; requests: any[]; count: number }) => (
-    <div className="flex-1 min-w-[250px]">
+    <div className="flex-1 min-w-[200px] max-w-[250px]">
       <div className="bg-muted/50 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold">{title}</h3>
@@ -162,7 +162,7 @@ export default function PipelineView() {
           <CardTitle>Onboarding Pipeline</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="flex gap-4 flex-wrap">
             <KanbanColumn
               title="Pending"
               requests={onboardingByStatus.pending}
@@ -193,7 +193,7 @@ export default function PipelineView() {
           <CardTitle>Offboarding Pipeline</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="flex gap-4 flex-wrap">
             <KanbanColumn
               title="Pending"
               requests={offboardingByStatus.pending}

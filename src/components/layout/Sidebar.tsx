@@ -32,7 +32,7 @@ const fteMenuItems = [
   { title: "Replacement Request", url: "/replacement", icon: RefreshCw },
   { title: "Offboarding Request", url: "/offboarding", icon: UserMinus },
   { title: "Rate Card Review", url: "/rate-card", icon: FileText },
-  { title: "Interview", url: "/interview", icon: Calendar },
+  { title: "Scheduled Interviews", url: "/interview", icon: Calendar },
   { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   // { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
   // { title: "Video Verification", url: "/video-verification", icon: Calendar },
