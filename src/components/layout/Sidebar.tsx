@@ -25,7 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
+ 
 const fteMenuItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Onboarding Request", url: "/onboarding", icon: UserPlus },
@@ -37,7 +37,7 @@ const fteMenuItems = [
   // { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
   // { title: "Video Verification", url: "/video-verification", icon: Calendar },
 ];
-
+ 
 const businessDeskMenuItems = [
   { title: "Dashboard", url: "/business-dashboard", icon: LayoutDashboard },
   { title: "Approval Inbox", url: "/approval-inbox", icon: CheckSquare },
@@ -46,7 +46,7 @@ const businessDeskMenuItems = [
   // { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   // { title: "Request Tracking", url: "/business-request-tracking", icon: ListChecks },
 ];
-
+ 
 const vendorMenuItems = [
   { title: "Dashboard", url: "/vendor-dashboard", icon: LayoutDashboard },
   { title: "Request Inbox", url: "/vendor-request-inbox", icon: Inbox },
@@ -55,12 +55,12 @@ const vendorMenuItems = [
   { title: "Confirmation", url: "/vendor-confirmation", icon: CheckCircle },
   // { title: "Offboarding", url: "/vendor-offboarding-request", icon: UserX },
 ];
-
+ 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [userRole, setUserRole] = useState("fte-lead");
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     const storedUser = localStorage.getItem("vomsUser");
     if (storedUser) {
@@ -68,20 +68,20 @@ export function Sidebar() {
       setUserRole(user.role);
     }
   }, []);
-
+ 
   const menuItems =
     userRole === "business-desk"
       ? businessDeskMenuItems
       : userRole === "vendor"
       ? vendorMenuItems
       : fteMenuItems;
-
+ 
   const handleLogout = () => {
     localStorage.removeItem("vomsUser");
     toast.success("Logged out successfully");
     navigate("/");
   };
-
+ 
   return (
     <>
       {/* Mobile Menu Button */}
@@ -94,7 +94,7 @@ export function Sidebar() {
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
-
+ 
       {/* Overlay for mobile */}
       {isOpen && (
         <div
@@ -102,7 +102,7 @@ export function Sidebar() {
           onClick={() => setIsOpen(false)}
         />
       )}
-
+ 
       {/* Sidebar */}
       <aside
         className={cn(
@@ -115,7 +115,7 @@ export function Sidebar() {
           <div className="flex items-center h-16 px-6 border-b border-sidebar-border">
             <h1 className="text-xl font-bold text-sidebar-foreground">VOMS</h1>
           </div>
-
+ 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-3">
@@ -138,10 +138,10 @@ export function Sidebar() {
                   </NavLink>
                 </li>
               ))}
-              
+             
             </ul>
           </nav>
-
+ 
           {/* Footer */}
           <div className="p-4 ">
             <button
@@ -164,3 +164,4 @@ export function Sidebar() {
     </>
   );
 }
+ 
