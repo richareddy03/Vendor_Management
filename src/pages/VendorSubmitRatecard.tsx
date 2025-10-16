@@ -32,7 +32,7 @@ export default function SubmitRateCard() {
   const requestData = location.state || {};
   
   const [resources, setResources] = useState<Resource[]>([]);
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(true); // Form shown by default
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   
@@ -112,7 +112,13 @@ export default function SubmitRateCard() {
             {requestData.requestId ? `Responding to request: ${requestData.requestId}` : "Add resources and submit rate card"}
           </p>
         </div>
-        <Button onClick={() => setShowAddForm(true)}>
+        <Button 
+          onClick={() => {
+            setShowAddForm(true);
+            setFormData({ vendor: "TechVendor Inc.", project: requestData.project || "", location: "remote" });
+            setEditingId(null);
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Resource
         </Button>
@@ -338,18 +344,6 @@ export default function SubmitRateCard() {
         </Card>
       )}
 
-      {resources.length === 0 && !showAddForm && (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">No resources added yet</p>
-            <Button onClick={() => setShowAddForm(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add First Resource
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Confirmation Modal */}
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent>
@@ -376,23 +370,6 @@ export default function SubmitRateCard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Annotation */}
-      <Card className="bg-accent/50 border-primary/20">
-        <CardHeader>
-          <CardTitle className="text-sm">💡 Interaction Notes</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          <ul className="list-disc list-inside space-y-1">
-            <li>Click "Add Resource" button at top right to open the form</li>
-            <li>Resume upload shows file name after selection; drag-and-drop supported</li>
-            <li>Table displays all added resources with edit/delete actions</li>
-            <li>Form validates required fields before allowing submission</li>
-            <li>Submission triggers modal confirmation and approval flow notification</li>
-            <li>Tech Stack field supports type-ahead (simulated with regular input)</li>
-          </ul>
-        </CardContent>
-      </Card>
     </div>
   );
 }

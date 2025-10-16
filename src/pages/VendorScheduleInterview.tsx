@@ -184,23 +184,6 @@ export default function ScheduleInterview() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-
-        {/* Annotation */}
-        <Card className="bg-accent/50 border-primary/20 mt-6">
-          <CardHeader>
-            <CardTitle className="text-sm">💡 Interaction Notes</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            <ul className="list-disc list-inside space-y-1">
-              {/* <li>No Interview Type or Attendees field - simplified flow</li>
-              <li>Time Slot is a dropdown selection only (not manual input)</li>
-              <li>Date picker has minimum date set to today</li> */}
-              <li>Interview summary preview appears when date and time are selected</li>
-              <li>Confirmation modal displays recipients and interview details</li>
-              <li>Upon confirmation, invites are sent to FTE Lead and Candidate</li>
-            </ul>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
