@@ -19,14 +19,14 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  
+
   Tooltip,
   Legend,
   ResponsiveContainer,
 } from "recharts";
 import { TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 
-// ✅ Extended monthly data for all 12 months
+
 const monthlyData = [
   { month: "Jan", plannedHours: 1600, actualHours: 1550, plannedCost: 120000, actualCost: 115000 },
   { month: "Feb", plannedHours: 1600, actualHours: 1620, plannedCost: 120000, actualCost: 122000 },
@@ -56,7 +56,6 @@ export default function BusinessDashboard() {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
 
-  // ✅ Dynamically select the last completed month
   useEffect(() => {
     const today = new Date();
     const lastMonthIndex = today.getMonth() - 1 >= 0 ? today.getMonth() - 1 : 11;
@@ -68,7 +67,6 @@ export default function BusinessDashboard() {
     setFilters((prev) => ({ ...prev, month: lastMonthName.toLowerCase() }));
   }, []);
 
-  // ✅ Handle dynamic month change
   const handleMonthChange = (val: string) => {
     setFilters({ ...filters, month: val });
     if (val === "all") {
