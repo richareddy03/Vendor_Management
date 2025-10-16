@@ -141,7 +141,7 @@ export default function Replacement() {
               </Select>
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="techStack">Tech Stack Required *</Label>
               <Input
                 id="techStack"
@@ -151,7 +151,7 @@ export default function Replacement() {
                 onChange={(e) => setTechStack(e.target.value)}
                 aria-label="Tech Stack"
               />
-            </div>
+            </div> */}
 
             <div className="flex gap-4 pt-4">
               <Button type="submit" className="flex-1">
