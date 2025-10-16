@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const requests = [
   {
@@ -74,19 +75,34 @@ export default function RequestTracking() {
   const [selectedRequest, setSelectedRequest] = useState<typeof requests[0] | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState("10");
+  const navigate = useNavigate();
 
   const handleViewDetails = (request: typeof requests[0]) => {
     setSelectedRequest(request);
     setShowDetailsModal(true);
   };
 
+  const handleBack = () => {
+    navigate("/dashboard");
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Request Tracking Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Track all your onboarding, replacement, and offboarding requests
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Request Tracking Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Track all your onboarding, replacement, and offboarding requests
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleBack}
+          aria-label="Back to Dashboard"
+        >
+          Back
+        </Button>
       </div>
 
       {/* Filters */}
@@ -192,21 +208,23 @@ export default function RequestTracking() {
 
       {/* Requests Table */}
       <Card className="shadow-material-md">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>All Requests</CardTitle>
-            <CardDescription>Complete list of all submitted requests</CardDescription>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>All Requests</CardTitle>
+              <CardDescription>Complete list of all submitted requests</CardDescription>
+            </div>
+            <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
+              <SelectTrigger className="w-32" aria-label="Rows per page">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-popover">
+                <SelectItem value="10">10 rows</SelectItem>
+                <SelectItem value="25">25 rows</SelectItem>
+                <SelectItem value="50">50 rows</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={rowsPerPage} onValueChange={setRowsPerPage}>
-            <SelectTrigger className="w-32" aria-label="Rows per page">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-popover">
-              <SelectItem value="10">10 rows</SelectItem>
-              <SelectItem value="25">25 rows</SelectItem>
-              <SelectItem value="50">50 rows</SelectItem>
-            </SelectContent>
-          </Select>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">

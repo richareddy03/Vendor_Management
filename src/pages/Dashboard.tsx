@@ -61,7 +61,7 @@ const recentRequests = [
     type: "Offboarding",
     vendor: "DataVendor Co.",
     status: "Completed",
-    date: "2025-01-12",
+    date: "2025-07-12",
   },
 ];
 
