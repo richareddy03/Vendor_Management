@@ -376,23 +376,6 @@ export default function SubmitRateCard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Annotation */}
-      <Card className="bg-accent/50 border-primary/20">
-        <CardHeader>
-          <CardTitle className="text-sm">💡 Interaction Notes</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          <ul className="list-disc list-inside space-y-1">
-            <li>Click "Add Resource" button at top right to open the form</li>
-            <li>Resume upload shows file name after selection; drag-and-drop supported</li>
-            <li>Table displays all added resources with edit/delete actions</li>
-            <li>Form validates required fields before allowing submission</li>
-            <li>Submission triggers modal confirmation and approval flow notification</li>
-            <li>Tech Stack field supports type-ahead (simulated with regular input)</li>
-          </ul>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -223,8 +223,8 @@ export default function Login() {
           <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
             <span className="text-2xl font-bold text-primary-foreground">V</span>
           </div>
-          <CardTitle className="text-2xl">Vendor Onboarding Management</CardTitle>
-          <CardDescription>Sign in to access your VOMS dashboard</CardDescription>
+          <CardTitle className="text-2xl">Vendor Management System</CardTitle>
+          <CardDescription>Sign in to access your VMS dashboard</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
