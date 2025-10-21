@@ -95,6 +95,7 @@ const Chatbot = ({ isOpen: isOpenProp, onClose: onCloseProp }) => {
                 key={index}
                 className={`max-w-[80%] ${message.type === "user" ? "ml-auto bg-blue-500 text-white" : "bg-white text-gray-800"} p-2 rounded-xl shadow-md`}
               >
+                
                 {message.text}
                 {message.options && message.options.length > 0 && (
                   <div className="mt-2 flex flex-col gap-2">
