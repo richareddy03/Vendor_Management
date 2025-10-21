@@ -167,7 +167,7 @@ export default function RequestInbox() {
                       <TableCell className="text-right">
                         <Button
                           size="sm"
-                          onClick={() => navigate("/submit-rate-card", { state: { requestId: req.id, project: req.project } })}
+                          onClick={() => navigate("/vendor-submit-ratecard", { state: { requestId: req.id, project: req.project } })}
                           disabled={req.status === "Responded"}
                         >
                           Respond

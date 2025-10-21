@@ -338,7 +338,7 @@ export default function Dashboard() {
             <SelectContent>
               <SelectItem value="current">Current Month</SelectItem>
               <SelectItem value="last">Last Month</SelectItem>
-              <SelectItem value="ytd">Year to Date</SelectItem>
+              {/* <SelectItem value="ytd">Year to Date</SelectItem> */}
             </SelectContent>
           </Select>
         </div>
