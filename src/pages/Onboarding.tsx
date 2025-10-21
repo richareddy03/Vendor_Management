@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Onboarding() {
   const [vendor, setVendor] = useState("");
@@ -31,13 +32,15 @@ export default function Onboarding() {
   const [projectName, setProjectName] = useState("");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [comments, setComments] = useState("");
+  const [preApproved, setPreApproved] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
-    if (!vendor || !techStack || !numResources || !projectName || !startDate || !endDate) {
+    if (!vendor || !techStack || !numResources || !projectName || !startDate || !endDate || !comments) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -47,7 +50,24 @@ export default function Onboarding() {
       return;
     }
 
+    // Mock submission data for integration with Dashboard.tsx
+    const submission = {
+      id: `PA-${Date.now()}`,
+      title: `Onboarding Approval - ${vendor}`,
+      type: "Onboarding",
+      vendor,
+      date: format(new Date(), "yyyy-MM-dd"),
+      status: "Pending",
+      comments,
+      preApproved,
+    };
+
+    // Simulate sending to Dashboard.tsx's pendingApprovalsData
+    console.log("Onboarding Submission:", submission);
+    toast.success("Onboarding request submitted successfully!");
+
     setShowSuccessModal(true);
+    handleReset(); // Reset form fields after successful submission
   };
 
   const handleReset = () => {
@@ -57,6 +77,8 @@ export default function Onboarding() {
     setProjectName("");
     setStartDate(undefined);
     setEndDate(undefined);
+    setComments("");
+    setPreApproved(false);
   };
 
   return (
@@ -186,6 +208,33 @@ export default function Onboarding() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="comments">Comments *</Label>
+              <Textarea
+                id="comments"
+                placeholder="Enter any additional comments or notes about this onboarding request"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                rows={4}
+                aria-label="Comments"
+              />
+              <p className="text-xs text-muted-foreground">
+                Provide details or justifications for the onboarding request.
+              </p>
+            </div>
+
+            {/* <div>
+              <Label className="flex items-center gap-2">
+                <Input
+                  type="checkbox"
+                  checked={preApproved}
+                  onChange={(e) => setPreApproved(e.target.checked)}
+                  aria-label="Pre approved onboarding"
+                />
+                Pre approved onboarding
+              </Label>
+            </div> */}
+
             <div className="flex gap-4 pt-4">
               <Button type="submit" className="flex-1">
                 Submit Request
@@ -205,6 +254,19 @@ export default function Onboarding() {
             <DialogDescription>
               Your onboarding request has been submitted and is now pending approval. The vendor will be
               notified once the request is approved through the approval chain.
+              <br />
+              <br />
+              <strong>Details:</strong>
+              <ul className="list-disc pl-5 mt-2">
+                <li>Vendor: {vendor}</li>
+                <li>Tech Stack: {techStack}</li>
+                <li>Number of Resources: {numResources}</li>
+                <li>Project Name: {projectName}</li>
+                <li>Start Date: {startDate ? format(startDate, "PPP") : "N/A"}</li>
+                <li>End Date: {endDate ? format(endDate, "PPP") : "N/A"}</li>
+                <li>Comments: {comments}</li>
+                {/* <li>Pre approved: {preApproved ? "Yes" : "No"}</li> */}
+              </ul>
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setShowSuccessModal(false)}>Close</Button>

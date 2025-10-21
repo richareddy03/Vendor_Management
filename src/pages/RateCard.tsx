@@ -15,15 +15,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle, XCircle, Eye, TrendingUp, TrendingDown } from "lucide-react";
+import { CheckCircle, XCircle, Eye, TrendingUp, TrendingDown, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import {
   Tooltip,
-  TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  TooltipContent,
 } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+import { format } from "date-fns";
 
 const candidates = [
   {
@@ -40,6 +42,8 @@ const candidates = [
     startDate: new Date(2025, 9, 16), // October 16, 2025
     endDate: "2026-04-16",
     justification: "Critical for frontend development",
+    preApproved: false,
+    notes: "",
   },
   {
     id: 2,
@@ -55,6 +59,8 @@ const candidates = [
     startDate: new Date(2025, 9, 16), // October 16, 2025
     endDate: "2026-05-16",
     justification: "Backend expertise required",
+    preApproved: false,
+    notes: "",
   },
   {
     id: 3,
@@ -70,6 +76,8 @@ const candidates = [
     startDate: new Date(2025, 9, 17), // October 17, 2025
     endDate: "2026-04-17",
     justification: "Required for cloud infrastructure setup",
+    preApproved: false,
+    notes: "",
   },
   {
     id: 4,
@@ -85,6 +93,8 @@ const candidates = [
     startDate: new Date(2025, 9, 20), // October 20, 2025
     endDate: "2026-03-20",
     justification: "Needed for data pipeline development",
+    preApproved: true,
+    notes: "",
   },
 ];
 
@@ -93,6 +103,9 @@ export default function RateCard() {
   const [selectedProject, setSelectedProject] = useState("all");
   const [selectedCandidate, setSelectedCandidate] = useState<typeof candidates[0] | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [notesCandidate, setNotesCandidate] = useState<typeof candidates[0] | null>(null);
+  const [notes, setNotes] = useState<{ [key: number]: string }>({});
   const navigate = useNavigate();
 
   const totalBudget = 500000;
@@ -113,6 +126,45 @@ export default function RateCard() {
     setShowProfileModal(true);
   };
 
+  const handleOpenNotes = (candidate: typeof candidates[0]) => {
+    setNotesCandidate(candidate);
+    setShowNotesModal(true);
+  };
+
+  const handleSaveNotes = () => {
+    if (notesCandidate) {
+      const currentNotes = notes[notesCandidate.id] || "";
+      setNotes({ ...notes, [notesCandidate.id]: currentNotes });
+      console.log("Saved Notes for Dashboard.tsx:", {
+        id: `CR-${Date.now()}`,
+        title: `CR Request - ${notesCandidate.name}`,
+        type: "CR Request",
+        vendor: notesCandidate.vendor,
+        date: format(new Date(), "yyyy-MM-dd"),
+        status: "Pending",
+        comments: currentNotes,
+        preApproved: notesCandidate.preApproved,
+      });
+      toast.success(`Notes saved for ${notesCandidate.name}`);
+      setShowNotesModal(false);
+    }
+  };
+
+  const handleRaiseCRRequest = (candidate: typeof candidates[0]) => {
+    const crRequest = {
+      id: `CR-${Date.now()}`,
+      title: `CR Request - ${candidate.name}`,
+      type: "CR Request",
+      vendor: candidate.vendor,
+      date: format(new Date(), "yyyy-MM-dd"),
+      status: "Pending",
+      comments: notes[candidate.id] || "No notes provided",
+      preApproved: candidate.preApproved,
+    };
+    console.log("CR Request for Dashboard.tsx:", crRequest);
+    toast.success(`CR request raised for ${candidate.name}`);
+  };
+
   const handleBack = () => {
     navigate("/dashboard");
   };
@@ -125,15 +177,10 @@ export default function RateCard() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Rate Card & Profile Review</h1>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleBack}
-          aria-label="Back to Dashboard"
-        >
+        <Button variant="outline" size="sm" onClick={handleBack} aria-label="Back to Dashboard">
           Back
         </Button>
       </div>
@@ -243,7 +290,7 @@ export default function RateCard() {
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Vendor</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Project</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Profile</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0 w-[80px]">Actions</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0 w-[120px]">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -304,6 +351,22 @@ export default function RateCard() {
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Reject</p>
+                              </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleOpenNotes(candidate)}
+                                  className="text-info hover:text-info/90"
+                                  aria-label="View notes and CR request"
+                                >
+                                  <Info className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Notes & CR Request</p>
                               </TooltipContent>
                             </Tooltip>
                           </div>
@@ -376,6 +439,54 @@ export default function RateCard() {
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-1">Business Justification</p>
                 <p className="text-base text-foreground">{selectedCandidate.justification}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground mb-1">Notes</p>
+                <p className="text-base text-foreground">{notes[selectedCandidate.id] || "No notes provided"}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Notes and CR Request Modal */}
+      <Dialog open={showNotesModal} onOpenChange={setShowNotesModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Notes & CR Request</DialogTitle>
+            <DialogDescription>
+              Raise a change request or add notes for {notesCandidate?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          {notesCandidate && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor={`notes-${notesCandidate.id}`} className="text-sm font-medium text-muted-foreground">
+                  Notes
+                </label>
+                <Textarea
+                  id={`notes-${notesCandidate.id}`}
+                  placeholder="Enter notes for this candidate"
+                  value={notes[notesCandidate.id] || ""}
+                  onChange={(e) => setNotes({ ...notes, [notesCandidate.id]: e.target.value })}
+                  rows={4}
+                  aria-label="Notes"
+                />
+              </div>
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => handleRaiseCRRequest(notesCandidate)}
+                  className="flex-1"
+                >
+                  Raise CR Request
+                </Button>
+                <Button
+                  onClick={handleSaveNotes}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Save Notes
+                </Button>
               </div>
             </div>
           )}

@@ -31,9 +31,9 @@ const fteMenuItems = [
   { title: "Onboarding Request", url: "/onboarding", icon: UserPlus },
   { title: "Replacement Request", url: "/replacement", icon: RefreshCw },
   { title: "Offboarding Request", url: "/offboarding", icon: UserMinus },
-  { title: "Rate Card Review", url: "/rate-card", icon: FileText },
+  { title: "Spend Summary", url: "/rate-card", icon: FileText },
   { title: "Interviews Calendar", url: "/interview", icon: Calendar },
-  { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
+  // { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   // { title: "Request Tracking", url: "/request-tracking", icon: ListChecks },
   // { title: "Video Verification", url: "/video-verification", icon: Calendar },
 ];
