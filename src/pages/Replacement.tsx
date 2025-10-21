@@ -24,23 +24,125 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+// Employee data from Dashboard.tsx's activeOnboardingData
+const activeOnboardingData = [
+  {
+    id: "AO-001",
+    name: "John Doe",
+    vendor: "TechSolutions Inc.",
+    role: "Senior React Developer",
+    project: "Mobile App Redesign",
+    startDate: "2025-10-16",
+    status: "In Progress",
+  },
+  {
+    id: "AO-002",
+    name: "Jane Smith",
+    vendor: "DevPro Services",
+    role: "Backend Engineer",
+    project: "API Infrastructure",
+    startDate: "2025-10-17",
+    status: "In Progress",
+  },
+  {
+    id: "AO-003",
+    name: "Mike Johnson",
+    vendor: "CloudExperts Ltd.",
+    role: "DevOps Engineer",
+    project: "Cloud Migration",
+    startDate: "2025-10-18",
+    status: "In Progress",
+  },
+  {
+    id: "AO-004",
+    name: "Sarah Wilson",
+    vendor: "DataVendor Co.",
+    role: "Data Analyst",
+    project: "Data Analytics",
+    startDate: "2025-10-19",
+    status: "In Progress",
+  },
+  {
+    id: "AO-005",
+    name: "David Brown",
+    vendor: "TechSolutions Inc.",
+    role: "Frontend Developer",
+    project: "Mobile App Redesign",
+    startDate: "2025-10-20",
+    status: "In Progress",
+  },
+  {
+    id: "AO-006",
+    name: "Emily Davis",
+    vendor: "DevPro Services",
+    role: "Full Stack Developer",
+    project: "API Infrastructure",
+    startDate: "2025-10-21",
+    status: "In Progress",
+  },
+  {
+    id: "AO-007",
+    name: "Robert Clark",
+    vendor: "CloudExperts Ltd.",
+    role: "Cloud Architect",
+    project: "Cloud Migration",
+    startDate: "2025-10-22",
+    status: "In Progress",
+  },
+  {
+    id: "AO-008",
+    name: "Lisa Green",
+    vendor: "DataVendor Co.",
+    role: "BI Analyst",
+    project: "Data Analytics",
+    startDate: "2025-10-23",
+    status: "In Progress",
+  },
+];
+
 export default function Replacement() {
   const [employeeId, setEmployeeId] = useState("");
   const [reason, setReason] = useState("");
   const [effectiveDate, setEffectiveDate] = useState<Date>();
   const [vendor, setVendor] = useState("");
+  const [project, setProject] = useState("");
   const [techStack, setTechStack] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Filter employees based on selected vendor and project
+  const filteredEmployees = activeOnboardingData.filter(
+    (emp) => emp.vendor === vendor && emp.project === project
+  );
+
+  // Get employee name for success modal
+  const employeeName = activeOnboardingData.find((emp) => emp.id === employeeId)?.name || "N/A";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!employeeId || !reason || !effectiveDate || !vendor || !techStack) {
+    // Validation
+    if (!employeeId || !reason || !effectiveDate || !vendor || !project || !techStack) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    // Mock submission for Dashboard.tsx's replacementsData
+    const submission = {
+      id: `REP-${Date.now()}`,
+      name: `Old Resource - ${employeeName}`,
+      newResource: "New Resource - Pending",
+      vendor,
+      project,
+      reason,
+      status: "Pending",
+      date: format(effectiveDate, "yyyy-MM-dd"),
+    };
+
+    console.log("Replacement Submission:", submission);
+    toast.success("Replacement request submitted successfully!");
+
     setShowSuccessModal(true);
+    handleReset();
   };
 
   const handleReset = () => {
@@ -48,6 +150,7 @@ export default function Replacement() {
     setReason("");
     setEffectiveDate(undefined);
     setVendor("");
+    setProject("");
     setTechStack("");
   };
 
@@ -69,16 +172,51 @@ export default function Replacement() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="employeeId">Current Employee / V-ID *</Label>
-              <Select value={employeeId} onValueChange={setEmployeeId}>
-                <SelectTrigger id="employeeId" aria-label="Select employee">
-                  <SelectValue placeholder="Select employee to replace" />
+              <Label htmlFor="vendor">Vendor *</Label>
+              <Select value={vendor} onValueChange={setVendor}>
+                <SelectTrigger id="vendor" aria-label="Select vendor">
+                  <SelectValue placeholder="Select vendor for replacement" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="V-12345">V-12345 - John Doe (React Developer)</SelectItem>
-                  <SelectItem value="V-12346">V-12346 - Jane Smith (Backend Engineer)</SelectItem>
-                  <SelectItem value="V-12347">V-12347 - Mike Johnson (DevOps)</SelectItem>
-                  <SelectItem value="V-12348">V-12348 - Sarah Wilson (QA Engineer)</SelectItem>
+                  <SelectItem value="TechSolutions Inc.">TechSolutions Inc.</SelectItem>
+                  <SelectItem value="DevPro Services">DevPro Services</SelectItem>
+                  <SelectItem value="CloudExperts Ltd.">CloudExperts Ltd.</SelectItem>
+                  <SelectItem value="DataVendor Co.">DataVendor Co.</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project">Project *</Label>
+              <Select value={project} onValueChange={setProject}>
+                <SelectTrigger id="project" aria-label="Select project">
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  <SelectItem value="Mobile App Redesign">Mobile App Redesign</SelectItem>
+                  <SelectItem value="API Infrastructure">API Infrastructure</SelectItem>
+                  <SelectItem value="Cloud Migration">Cloud Migration</SelectItem>
+                  <SelectItem value="Data Analytics">Data Analytics</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="employeeId">Current Employee / V-ID *</Label>
+              <Select value={employeeId} onValueChange={setEmployeeId} disabled={!vendor || !project}>
+                <SelectTrigger id="employeeId" aria-label="Select employee">
+                  <SelectValue placeholder={vendor && project ? "Select employee to replace" : "Select vendor and project first"} />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  {filteredEmployees.length > 0 ? (
+                    filteredEmployees.map((emp) => (
+                      <SelectItem key={emp.id} value={emp.id}>
+                        {`${emp.id} - ${emp.name} (${emp.role})`}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-2 text-sm text-muted-foreground">No employees available</div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -90,11 +228,11 @@ export default function Replacement() {
                   <SelectValue placeholder="Select reason" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="performance">Performance Issues</SelectItem>
-                  <SelectItem value="contract-end">End of Contract</SelectItem>
-                  <SelectItem value="resignation">Resignation</SelectItem>
-                  <SelectItem value="skill-mismatch">Skill Mismatch</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  <SelectItem value="Performance Issues">Performance Issues</SelectItem>
+                  <SelectItem value="End of Contract">End of Contract</SelectItem>
+                  <SelectItem value="Resignation">Resignation</SelectItem>
+                  <SelectItem value="Skill Mismatch">Skill Mismatch</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -127,31 +265,16 @@ export default function Replacement() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="vendor">Vendor *</Label>
-              <Select value={vendor} onValueChange={setVendor}>
-                <SelectTrigger id="vendor" aria-label="Select vendor">
-                  <SelectValue placeholder="Select vendor for replacement" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover">
-                  <SelectItem value="techsolutions">TechSolutions Inc.</SelectItem>
-                  <SelectItem value="devpro">DevPro Services</SelectItem>
-                  <SelectItem value="cloudexperts">CloudExperts Ltd.</SelectItem>
-                  <SelectItem value="datavendor">DataVendor Co.</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* <div className="space-y-2">
-              <Label htmlFor="techStack">Tech Stack Required *</Label>
+              <Label htmlFor="techStack">Tech Stack *</Label>
               <Input
                 id="techStack"
                 type="text"
-                placeholder="e.g., React, TypeScript, Node.js"
+                placeholder="e.g., React, Node.js, AWS"
                 value={techStack}
                 onChange={(e) => setTechStack(e.target.value)}
                 aria-label="Tech Stack"
               />
-            </div> */}
+            </div>
 
             <div className="flex gap-4 pt-4">
               <Button type="submit" className="flex-1">
@@ -172,6 +295,17 @@ export default function Replacement() {
             <DialogDescription>
               Your replacement request has been submitted successfully. It will follow the same approval
               chain as onboarding requests. The vendor will be notified once approved.
+              <br />
+              <br />
+              <strong>Details:</strong>
+              <ul className="list-disc pl-5 mt-2">
+                <li>Employee: {employeeName}</li>
+                <li>Vendor: {vendor}</li>
+                <li>Project: {project}</li>
+                <li>Reason: {reason}</li>
+                <li>Effective Date: {effectiveDate ? format(effectiveDate, "PPP") : "N/A"}</li>
+                <li>Tech Stack: {techStack}</li>
+              </ul>
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setShowSuccessModal(false)}>Close</Button>
