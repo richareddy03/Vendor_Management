@@ -22,22 +22,139 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+
+// Employee data from Dashboard.tsx's activeOnboardingData
+const activeOnboardingData = [
+  {
+    id: "AO-001",
+    name: "John Doe",
+    vendor: "TechSolutions Inc.",
+    role: "Senior React Developer",
+    project: "Mobile App Redesign",
+    startDate: "2025-10-16",
+    status: "In Progress",
+  },
+  {
+    id: "AO-002",
+    name: "Jane Smith",
+    vendor: "DevPro Services",
+    role: "Backend Engineer",
+    project: "API Infrastructure",
+    startDate: "2025-10-17",
+    status: "In Progress",
+  },
+  {
+    id: "AO-003",
+    name: "Mike Johnson",
+    vendor: "CloudExperts Ltd.",
+    role: "DevOps Engineer",
+    project: "Cloud Migration",
+    startDate: "2025-10-18",
+    status: "In Progress",
+  },
+  {
+    id: "AO-004",
+    name: "Sarah Wilson",
+    vendor: "DataVendor Co.",
+    role: "Data Analyst",
+    project: "Data Analytics",
+    startDate: "2025-10-19",
+    status: "In Progress",
+  },
+  {
+    id: "AO-005",
+    name: "David Brown",
+    vendor: "TechSolutions Inc.",
+    role: "Frontend Developer",
+    project: "Mobile App Redesign",
+    startDate: "2025-10-20",
+    status: "In Progress",
+  },
+  {
+    id: "AO-006",
+    name: "Emily Davis",
+    vendor: "DevPro Services",
+    role: "Full Stack Developer",
+    project: "API Infrastructure",
+    startDate: "2025-10-21",
+    status: "In Progress",
+  },
+  {
+    id: "AO-007",
+    name: "Robert Clark",
+    vendor: "CloudExperts Ltd.",
+    role: "Cloud Architect",
+    project: "Cloud Migration",
+    startDate: "2025-10-22",
+    status: "In Progress",
+  },
+  {
+    id: "AO-008",
+    name: "Lisa Green",
+    vendor: "DataVendor Co.",
+    role: "BI Analyst",
+    project: "Data Analytics",
+    startDate: "2025-10-23",
+    status: "In Progress",
+  },
+];
 
 export default function Offboarding() {
   const [employeeId, setEmployeeId] = useState("");
   const [reason, setReason] = useState("");
   const [effectiveDate, setEffectiveDate] = useState<Date>();
+  const [vendor, setVendor] = useState("");
+  const [project, setProject] = useState("");
+  const [comments, setComments] = useState("");
+  const [preApproved, setPreApproved] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Filter employees based on selected vendor and project
+  const filteredEmployees = activeOnboardingData.filter(
+    (emp) => emp.vendor === vendor && emp.project === project
+  );
+
+  // Get employee name for success modal and submission
+  const employeeName = activeOnboardingData.find((emp) => emp.id === employeeId)?.name || "N/A";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!employeeId || !reason || !effectiveDate) {
+    // Validation
+    if (!employeeId || !reason || !effectiveDate || !vendor || !project) {
       toast.error("Please fill in all required fields");
       return;
     }
 
+    // Mock submission for Dashboard.tsx's pendingApprovalsData
+    const submission = {
+      id: `PA-${Date.now()}`,
+      title: `Offboarding Approval - ${vendor}`,
+      type: "Offboarding",
+      vendor,
+      date: format(effectiveDate, "yyyy-MM-dd"),
+      status: "Pending",
+      comments: comments || reason,
+      preApproved,
+    };
+
+    console.log("Offboarding Submission:", submission);
+    toast.success("Offboarding request submitted successfully!");
+
     setShowSuccessModal(true);
+    handleReset();
+  };
+
+  const handleReset = () => {
+    setEmployeeId("");
+    setReason("");
+    setEffectiveDate(undefined);
+    setVendor("");
+    setProject("");
+    setComments("");
+    setPreApproved(false);
   };
 
   return (
@@ -58,16 +175,51 @@ export default function Offboarding() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="employeeId">Employee / V-ID *</Label>
-              <Select value={employeeId} onValueChange={setEmployeeId}>
-                <SelectTrigger id="employeeId" aria-label="Select employee">
-                  <SelectValue placeholder="Select employee to offboard" />
+              <Label htmlFor="vendor">Vendor *</Label>
+              <Select value={vendor} onValueChange={setVendor}>
+                <SelectTrigger id="vendor" aria-label="Select vendor">
+                  <SelectValue placeholder="Select vendor" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="V-12345">V-12345 - John Doe (React Developer)</SelectItem>
-                  <SelectItem value="V-12346">V-12346 - Jane Smith (Backend Engineer)</SelectItem>
-                  <SelectItem value="V-12347">V-12347 - Mike Johnson (DevOps)</SelectItem>
-                  <SelectItem value="V-12348">V-12348 - Sarah Wilson (QA Engineer)</SelectItem>
+                  <SelectItem value="TechSolutions Inc.">TechSolutions Inc.</SelectItem>
+                  <SelectItem value="DevPro Services">DevPro Services</SelectItem>
+                  <SelectItem value="CloudExperts Ltd.">CloudExperts Ltd.</SelectItem>
+                  <SelectItem value="DataVendor Co.">DataVendor Co.</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="project">Project *</Label>
+              <Select value={project} onValueChange={setProject}>
+                <SelectTrigger id="project" aria-label="Select project">
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  <SelectItem value="Mobile App Redesign">Mobile App Redesign</SelectItem>
+                  <SelectItem value="API Infrastructure">API Infrastructure</SelectItem>
+                  <SelectItem value="Cloud Migration">Cloud Migration</SelectItem>
+                  <SelectItem value="Data Analytics">Data Analytics</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="employeeId">Employee / V-ID *</Label>
+              <Select value={employeeId} onValueChange={setEmployeeId} disabled={!vendor || !project}>
+                <SelectTrigger id="employeeId" aria-label="Select employee">
+                  <SelectValue placeholder={vendor && project ? "Select employee to offboard" : "Select vendor and project first"} />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  {filteredEmployees.length > 0 ? (
+                    filteredEmployees.map((emp) => (
+                      <SelectItem key={emp.id} value={emp.id}>
+                        {`${emp.id} - ${emp.name} (${emp.role})`}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-2 text-sm text-muted-foreground">No employees available</div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -79,8 +231,8 @@ export default function Offboarding() {
                   <SelectValue placeholder="Select reason" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="resignation">Resignation</SelectItem>
-                  <SelectItem value="contract-end">End of Contract</SelectItem>
+                  <SelectItem value="Resignation">Resignation</SelectItem>
+                  <SelectItem value="End of Contract">End of Contract</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -112,9 +264,39 @@ export default function Offboarding() {
               </Popover>
             </div>
 
-            <Button type="submit" className="w-full">
-              Submit Offboarding Request
-            </Button>
+            {/* <div className="space-y-2">
+              <Label htmlFor="comments">Comments</Label>
+              <Textarea
+                id="comments"
+                placeholder="Enter any additional comments or notes about this offboarding request"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                rows={4}
+                aria-label="Comments"
+              />
+              
+            </div> */}
+
+            {/* <div>
+              <Label className="flex items-center gap-2">
+                <Input
+                  type="checkbox"
+                  checked={preApproved}
+                  onChange={(e) => setPreApproved(e.target.checked)}
+                  aria-label="Pre approved offboarding"
+                />
+                Pre approved offboarding
+              </Label>
+            </div> */}
+
+            <div className="flex gap-4 pt-4">
+              <Button type="submit" className="flex-1">
+                Submit Offboarding Request
+              </Button>
+              <Button type="button" variant="outline" onClick={handleReset}>
+                Reset
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
@@ -126,6 +308,18 @@ export default function Offboarding() {
             <DialogDescription>
               Your offboarding request has been submitted successfully. Business Desk has been notified
               to disable resource tracker access for this employee.
+              <br />
+              <br />
+              <strong>Details:</strong>
+              <ul className="list-disc pl-5 mt-2">
+                <li>Employee: {employeeName}</li>
+                <li>Vendor: {vendor}</li>
+                <li>Project: {project}</li>
+                <li>Reason: {reason}</li>
+                <li>Effective Date: {effectiveDate ? format(effectiveDate, "PPP") : "N/A"}</li>
+                <li>Comments: {comments || reason}</li>
+                <li>Pre approved: {preApproved ? "Yes" : "No"}</li>
+              </ul>
             </DialogDescription>
           </DialogHeader>
           <Button onClick={() => setShowSuccessModal(false)}>Close</Button>

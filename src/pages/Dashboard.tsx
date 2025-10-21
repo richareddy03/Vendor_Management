@@ -11,6 +11,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const stats = [
   {
@@ -626,7 +632,7 @@ export default function Dashboard() {
   };
 
   const handleCardClick = (title: string) => {
-    setSelectedCategory(selectedCategory === title ? null : title);
+    setSelectedCategory(title);
   };
 
   const handleChatbotToggle = () => {
@@ -700,120 +706,104 @@ export default function Dashboard() {
     }
 
     return (
-      <Card className="shadow-material-md">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{title}</CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSelectedCategory(null)}
-            aria-label="Close details"
-          >
-            <X className="h-4 w-4" />
-            Close
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full">
-            <table className="w-full table-auto">
-              <thead>
-                <tr className="border-b border-border">
-                  {columns.map((column) => (
-                    <th key={column} className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">
-                      {column}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item) => (
-                  <tr key={item.id} className="border-b border-border hover:bg-accent/50 transition-base">
-                    <td className="py-3 px-4 text-sm font-medium text-foreground whitespace-normal break-words">{item.id}</td>
-                    {selectedCategory === "Pending Approvals" && (
-                      <>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.title}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.type}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.date}</td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning`}
-                          >
-                            {item.status}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="line-clamp-2">{item.comments}</span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{item.comments}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal">{item.preApproved ? "Yes" : "No"}</td>
-                      </>
-                    )}
-                    {selectedCategory === "Active Onboarding" && (
-                      <>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.role}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.startDate}</td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary`}
-                          >
-                            {item.status}
-                          </span>
-                        </td>
-                      </>
-                    )}
-                    {selectedCategory === "Replacements" && (
-                      <>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.newResource}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.reason}</td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              item.status === "Approved"
-                                ? "bg-success/10 text-success"
-                                : item.status === "Completed"
-                                ? "bg-success/10 text-success"
-                                : item.status === "In Progress"
-                                ? "bg-primary/10 text-primary"
-                                : "bg-warning/10 text-warning"
-                            }`}
-                          >
-                            {item.status}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.date}</td>
-                      </>
-                    )}
-                    {selectedCategory === "Completed" && (
-                      <>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.type}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
-                        <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.completedDate}</td>
-                      </>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="border-b border-border">
+              {columns.map((column) => (
+                <th key={column} className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item) => (
+              <tr key={item.id} className="border-b border-border hover:bg-accent/50 transition-base">
+                <td className="py-3 px-4 text-sm font-medium text-foreground whitespace-normal break-words">{item.id}</td>
+                {selectedCategory === "Pending Approvals" && (
+                  <>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.title}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.type}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.date}</td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning/10 text-warning`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="line-clamp-2">{item.comments}</span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{item.comments}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal">{item.preApproved ? "Yes" : "No"}</td>
+                  </>
+                )}
+                {selectedCategory === "Active Onboarding" && (
+                  <>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.role}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.startDate}</td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </>
+                )}
+                {selectedCategory === "Replacements" && (
+                  <>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.newResource}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.reason}</td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          item.status === "Approved"
+                            ? "bg-success/10 text-success"
+                            : item.status === "Completed"
+                            ? "bg-success/10 text-success"
+                            : item.status === "In Progress"
+                            ? "bg-primary/10 text-primary"
+                            : "bg-warning/10 text-warning"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.date}</td>
+                  </>
+                )}
+                {selectedCategory === "Completed" && (
+                  <>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.type}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.name}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.vendor}</td>
+                    <td className="py-3 px-4 text-sm text-foreground whitespace-normal break-words">{item.project}</td>
+                    <td className="py-3 px-4 text-sm text-muted-foreground whitespace-normal">{item.completedDate}</td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     );
   };
 
@@ -845,9 +835,6 @@ export default function Dashboard() {
           </Card>
         ))}
       </div>
-
-      {/* Details Table */}
-      {renderDetailsTable()}
 
       {/* Recent Requests Table */}
       <Card className="shadow-material-md">
@@ -903,6 +890,25 @@ export default function Dashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Details Modal */}
+      <Dialog open={!!selectedCategory} onOpenChange={() => setSelectedCategory(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between">
+            <DialogTitle>{selectedCategory}</DialogTitle>
+            {/* <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedCategory(null)}
+              aria-label="Close details"
+            >
+              <X className="h-4 w-4" />
+              Close
+            </Button> */}
+          </DialogHeader>
+          {renderDetailsTable()}
+        </DialogContent>
+      </Dialog>
 
       {/* Chatbot Toggle Button */}
       <TooltipProvider>

@@ -142,14 +142,17 @@ export default function Onboarding() {
 
             <div className="space-y-2">
               <Label htmlFor="projectName">Project Name *</Label>
-              <Input
-                id="projectName"
-                type="text"
-                placeholder="e.g., Mobile App Redesign"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
-                aria-label="Project Name"
-              />
+              <Select value={projectName} onValueChange={setProjectName}>
+                <SelectTrigger id="projectName" aria-label="Select project">
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  <SelectItem value="Mobile App Redesign">Mobile App Redesign</SelectItem>
+                  <SelectItem value="API Infrastructure">API Infrastructure</SelectItem>
+                  <SelectItem value="Cloud Migration">Cloud Migration</SelectItem>
+                  <SelectItem value="Data Analytics">Data Analytics</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
