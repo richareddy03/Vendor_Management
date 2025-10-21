@@ -17,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import FteLeadChatbot from "./FTELeadChatbot";
 
 const stats = [
   {
@@ -909,82 +910,11 @@ export default function Dashboard() {
           {renderDetailsTable()}
         </DialogContent>
       </Dialog>
-
-      {/* Chatbot Toggle Button */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="default"
-              size="icon"
-              className="fixed bottom-4 right-4 rounded-full bg-primary text-primary-foreground shadow-material-md z-50"
-              onClick={handleChatbotToggle}
-              aria-label={showChatbot ? "Close Chatbot" : "Open Chatbot"}
-            >
-              {showChatbot ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{showChatbot ? "Close Chatbot" : "Open Chatbot"}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      {/* Chatbot Window */}
-      {showChatbot && (
-        <div
-          className="fixed bottom-16 right-4 max-w-sm w-full bg-background border border-border rounded-lg shadow-material-md transition-transform duration-300 ease-in-out transform translate-y-0 z-40"
-        >
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <h3 className="text-lg font-semibold text-foreground">Assistant</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleChatbotToggle}
-              aria-label="Close chatbot"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="p-4 max-h-96 overflow-y-auto">
-            {chatMessages.map((message, index) => (
-              <div
-                key={index}
-                className={`mb-4 flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[70%] p-3 rounded-lg ${
-                    message.sender === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground"
-                  }`}
-                >
-                  <p className="text-sm">{message.text}</p>
-                  <span className="text-xs text-muted-foreground mt-1 block">{message.timestamp}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="p-4 border-t border-border flex items-center gap-2">
-            <Input
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
-              className="flex-1"
-              aria-label="Chat input"
-            />
-            <Button
-              size="icon"
-              onClick={handleSendMessage}
-              aria-label="Send message"
-              disabled={!userInput.trim()}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+     
+     {/* Chatbot Component */}
+     <FteLeadChatbot isOpen={showChatbot} onClose={setShowChatbot} />
+      
+      
     </div>
   );
 }
