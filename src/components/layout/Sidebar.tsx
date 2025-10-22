@@ -42,17 +42,17 @@ const businessDeskMenuItems = [
   { title: "Dashboard", url: "/business-dashboard", icon: LayoutDashboard },
   { title: "Approval Inbox", url: "/approval-inbox", icon: CheckSquare },
   // { title: "Rate Card Review", url: "/business-rate-card", icon: FileText },
-  { title: "Budget Management", url: "/budget-management", icon: DollarSign },
+  // { title: "Budget Management", url: "/budget-management", icon: DollarSign },
   // { title: "Pipeline View", url: "/pipeline-view", icon: TrendingUp },
   // { title: "Request Tracking", url: "/business-request-tracking", icon: ListChecks },
 ];
  
 const vendorMenuItems = [
   { title: "Dashboard", url: "/vendor-dashboard", icon: LayoutDashboard },
-  { title: "Request Inbox", url: "/vendor-request-inbox", icon: Inbox },
+  // { title: "Request Inbox", url: "/vendor-request-inbox", icon: Inbox },
   // { title: "Submit Rate Card", url: "/vendor-submit-ratecard", icon: FileText },
   // { title: "Schedule Interview", url: "/vendor-schedule-interview", icon: Calendar },
-  { title: "Confirmation", url: "/vendor-confirmation", icon: CheckCircle },
+  { title: "Confirmation to FTE", url: "/vendor-confirmation", icon: CheckCircle },
   // { title: "Offboarding", url: "/vendor-offboarding-request", icon: UserX },
 ];
  
