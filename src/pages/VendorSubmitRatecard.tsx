@@ -31,6 +31,7 @@ import { toast } from "sonner";
 interface Resource {
   id: string;
   candidateName: string;
+  candidateEmail: string;
   vendor: string;
   project: string;
   role: string;
@@ -75,6 +76,7 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
     const newResource: Resource = {
       id: editingId || Date.now().toString(),
       candidateName: formData.candidateName || "",
+      candidateEmail: formData.candidateEmail || "",
       vendor: formData.vendor || "TechVendor Inc.",
       project: formData.project || "",
       role: formData.role || "",
@@ -108,6 +110,7 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
       project: requestData.project || "",
       location: "remote",
       candidateName: "",
+      candidateEmail:"",
       role: "",
       startDate: "",
       endDate: "",
@@ -170,6 +173,17 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
                     setFormData({ ...formData, candidateName: e.target.value })
                   }
                   placeholder="Enter candidate name"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label>Candidate Email *</Label>
+                <Input
+                  value={formData.candidateEmail || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, candidateEmail: e.target.value })
+                  }
+                  placeholder="Enter candidate email"
                 />
               </div>
 
@@ -390,6 +404,7 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Candidate</TableHead>
+                    <TableHead>Email</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead>Rate</TableHead>
                     <TableHead>Proposed Yearly Cost</TableHead>
@@ -402,6 +417,7 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
                   {resources.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell>{r.candidateName}</TableCell>
+                      <TableCell>{r.candidateEmail}</TableCell>
                       <TableCell>{r.role}</TableCell>
                       <TableCell>${r.proposedRate}/hr</TableCell>
                       <TableCell>${r.proposedCostYear}</TableCell>
