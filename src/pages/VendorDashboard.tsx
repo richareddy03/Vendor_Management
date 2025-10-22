@@ -1,7 +1,8 @@
-
+// import { useState, useEffect } from "react";
+// import { useLocation } from "react-router-dom";
 // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+// import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from "recharts";
 // import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 // import { Badge } from "@/components/ui/badge";
 // import VendorChatbot from "./VendorChatbot";
@@ -13,6 +14,10 @@
 //   { month: "Apr", plannedHours: 420, actualHours: 440, plannedCost: 42000, actualCost: 44000 },
 //   { month: "May", plannedHours: 480, actualHours: 490, plannedCost: 48000, actualCost: 49000 },
 //   { month: "Jun", plannedHours: 510, actualHours: 500, plannedCost: 51000, actualCost: 50000 },
+//   { month: "Jul", plannedHours: 460, actualHours: 450, plannedCost: 46000, actualCost: 45000 },
+//   { month: "Aug", plannedHours: 470, actualHours: 465, plannedCost: 47000, actualCost: 46500 },
+//   { month: "Sep", plannedHours: 490, actualHours: 485, plannedCost: 49000, actualCost: 48500 },
+//   { month: "Oct", plannedHours: 500, actualHours: 490, plannedCost: 50000, actualCost: 49000 },
 // ];
 
 // const activeEmployees = [
@@ -35,7 +40,46 @@
 //   { project: "Delta", avgRate: "$80/hr", resources: 3, status: "Pending" },
 // ];
 
-// export default function Dashboard() {
+// const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// export default function VendorDashboard() {
+//   const location = useLocation();
+//   const [filters, setFilters] = useState({
+//     project: "all",
+//     lead: "all",
+//     workstream: "all",
+//     manager: "all",
+//     month: "oct",
+//   });
+//   const [filteredData, setFilteredData] = useState([]);
+//   const [selectedMonth, setSelectedMonth] = useState("Oct");
+//   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+
+//   useEffect(() => {
+//     const params = new URLSearchParams(location.search);
+//     if (params.get("scroll") === "true") {
+//       window.scrollTo({ top: 100, behavior: "smooth" });
+//     }
+//   }, [location]);
+
+//   useEffect(() => {
+//     const monthData = plannedVsActualData.filter((d) => d.month.toLowerCase() === "oct");
+//     setFilteredData(monthData);
+//   }, []);
+
+//   const handleMonthChange = (val) => {
+//     setFilters({ ...filters, month: val });
+//     if (val === "all") {
+//       setFilteredData(plannedVsActualData);
+//       setSelectedMonth("All Months");
+//     } else {
+//       const monthName = val.charAt(0).toUpperCase() + val.slice(1, 3);
+//       setSelectedMonth(monthName);
+//       const monthData = plannedVsActualData.filter((d) => d.month.toLowerCase() === val);
+//       setFilteredData(monthData);
+//     }
+//   };
+
 //   return (
 //     <div className="p-6 space-y-6">
 //       {/* Header */}
@@ -43,29 +87,6 @@
 //         <div>
 //           <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
 //           <p className="text-muted-foreground mt-1">Overview of your vendor operations</p>
-//         </div>
-//         <div className="flex gap-3">
-//           <Select defaultValue="all">
-//             <SelectTrigger className="w-[180px]">
-//               <SelectValue placeholder="Select Project" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="all">All Projects</SelectItem>
-//               <SelectItem value="alpha">Alpha</SelectItem>
-//               <SelectItem value="beta">Beta</SelectItem>
-//               <SelectItem value="gamma">Gamma</SelectItem>
-//             </SelectContent>
-//           </Select>
-//           <Select defaultValue="current">
-//             <SelectTrigger className="w-[180px]">
-//               <SelectValue placeholder="Select Month" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="current">Current Month</SelectItem>
-//               <SelectItem value="last">Last Month</SelectItem>
-//               {/* <SelectItem value="ytd">Year to Date</SelectItem> */}
-//             </SelectContent>
-//           </Select>
 //         </div>
 //       </div>
 
@@ -109,26 +130,117 @@
 //         </Card>
 //       </div>
 
-//       {/* Charts (Both as Bar Graphs) */}
+//       {/* Filters */}
+//       <Card>
+//         <CardHeader>
+//           <CardTitle>Filters</CardTitle>
+//         </CardHeader>
+//         <CardContent>
+//           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+//             <div className="space-y-2">
+//               <Label>Project Grouping</Label>
+//               <Select
+//                 value={filters.project}
+//                 onValueChange={(val) => setFilters({ ...filters, project: val })}
+//               >
+//                 <SelectTrigger>
+//                   <SelectValue />
+//                 </SelectTrigger>
+//                 <SelectContent className="bg-popover">
+//                   <SelectItem value="all">All Projects</SelectItem>
+//                   <SelectItem value="alpha">Project Alpha</SelectItem>
+//                   <SelectItem value="beta">Project Beta</SelectItem>
+//                   <SelectItem value="gamma">Project Gamma</SelectItem>
+//                 </SelectContent>
+//               </Select>
+//             </div>
+//             <div className="space-y-2">
+//               <Label>Lead</Label>
+//               <Select
+//                 value={filters.lead}
+//                 onValueChange={(val) => setFilters({ ...filters, lead: val })}
+//               >
+//                 <SelectTrigger>
+//                   <SelectValue />
+//                 </SelectTrigger>
+//                 <SelectContent className="bg-popover">
+//                   <SelectItem value="all">All Leads</SelectItem>
+//                   <SelectItem value="lead-1">John Smith</SelectItem>
+//                   <SelectItem value="lead-2">Sarah Johnson</SelectItem>
+//                 </SelectContent>
+//               </Select>
+//             </div>
+//             <div className="space-y-2">
+//               <Label>FY26 Workstream</Label>
+//               <Select
+//                 value={filters.workstream}
+//                 onValueChange={(val) => setFilters({ ...filters, workstream: val })}
+//               >
+//                 <SelectTrigger>
+//                   <SelectValue />
+//                 </SelectTrigger>
+//                 <SelectContent className="bg-popover">
+//                   <SelectItem value="all">All Workstreams</SelectItem>
+//                   <SelectItem value="ws-1">Digital Transformation</SelectItem>
+//                   <SelectItem value="ws-2">Cloud Migration</SelectItem>
+//                 </SelectContent>
+//               </Select>
+//             </div>
+//             <div className="space-y-2">
+//               <Label>FTE Reporting Manager</Label>
+//               <Select
+//                 value={filters.manager}
+//                 onValueChange={(val) => setFilters({ ...filters, manager: val })}
+//               >
+//                 <SelectTrigger>
+//                   <SelectValue />
+//                 </SelectTrigger>
+//                 <SelectContent className="bg-popover">
+//                   <SelectItem value="all">All Managers</SelectItem>
+//                   <SelectItem value="mgr-1">Michael Brown</SelectItem>
+//                   <SelectItem value="mgr-2">Lisa Davis</SelectItem>
+//                 </SelectContent>
+//               </Select>
+//             </div>
+//             <div className="space-y-2">
+//               <Label>Month</Label>
+//               <Select value={filters.month} onValueChange={handleMonthChange}>
+//                 <SelectTrigger>
+//                   <SelectValue />
+//                 </SelectTrigger>
+//                 <SelectContent className="bg-popover max-h-48 overflow-y-auto scrollbar-thin">
+//                   <SelectItem value="all">All Months</SelectItem>
+//                   {monthNames.slice(0, 10).map((m) => (
+//                     <SelectItem key={m} value={m.toLowerCase()}>
+//                       {m}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectContent>
+//               </Select>
+//             </div>
+//           </div>
+//         </CardContent>
+//       </Card>
+
+//       {/* Charts */}
 //       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//         {/* Bar Chart: Planned vs Actual Hours */}
 //         <Card>
 //           <CardHeader>
-//             <CardTitle>Planned vs Actual Hours</CardTitle>
+//             <CardTitle>Planned vs Actual Hours ({selectedMonth})</CardTitle>
 //             <CardDescription>Monthly comparison of planned and actual work hours</CardDescription>
 //           </CardHeader>
 //           <CardContent>
 //             <ResponsiveContainer width="100%" height={300}>
-//               <BarChart data={plannedVsActualData}>
+//               <BarChart data={filteredData}>
 //                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
 //                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
 //                 <YAxis stroke="hsl(var(--muted-foreground))" />
-//                 <Tooltip 
-//                   contentStyle={{ 
-//                     backgroundColor: "hsl(var(--card))", 
+//                 <Tooltip
+//                   contentStyle={{
+//                     backgroundColor: "hsl(var(--card))",
 //                     border: "1px solid hsl(var(--border))",
-//                     borderRadius: "var(--radius)"
-//                   }} 
+//                     borderRadius: "var(--radius)",
+//                   }}
 //                 />
 //                 <Legend />
 //                 <Bar dataKey="plannedHours" fill="hsl(var(--primary))" name="Planned Hours" />
@@ -138,24 +250,23 @@
 //           </CardContent>
 //         </Card>
 
-//         {/* Bar Chart: Planned vs Actual Costs */}
 //         <Card>
 //           <CardHeader>
-//             <CardTitle>Planned vs Actual Costs</CardTitle>
+//             <CardTitle>Planned vs Actual Costs ({selectedMonth})</CardTitle>
 //             <CardDescription>Monthly cost comparison in USD</CardDescription>
 //           </CardHeader>
 //           <CardContent>
 //             <ResponsiveContainer width="100%" height={300}>
-//               <BarChart data={plannedVsActualData}>
+//               <BarChart data={filteredData}>
 //                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
 //                 <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" />
 //                 <YAxis stroke="hsl(var(--muted-foreground))" />
-//                 <Tooltip 
-//                   contentStyle={{ 
-//                     backgroundColor: "hsl(var(--card))", 
+//                 <Tooltip
+//                   contentStyle={{
+//                     backgroundColor: "hsl(var(--card))",
 //                     border: "1px solid hsl(var(--border))",
-//                     borderRadius: "var(--radius)"
-//                   }} 
+//                     borderRadius: "var(--radius)",
+//                   }}
 //                 />
 //                 <Legend />
 //                 <Bar dataKey="plannedCost" fill="hsl(var(--primary))" name="Planned Cost" />
@@ -264,20 +375,23 @@
 //           </Table>
 //         </CardContent>
 //       </Card>
+
+//       {/* Vendor Chatbot */}
+//       <VendorChatbot isOpen={isChatbotOpen} onClose={setIsChatbotOpen} />
 //     </div>
 //   );
 // }
 
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import VendorChatbot from "./VendorChatbot";
-
+ 
 const plannedVsActualData = [
   { month: "Jan", plannedHours: 400, actualHours: 380, plannedCost: 40000, actualCost: 38000 },
   { month: "Feb", plannedHours: 450, actualHours: 470, plannedCost: 45000, actualCost: 47000 },
@@ -290,29 +404,24 @@ const plannedVsActualData = [
   { month: "Sep", plannedHours: 490, actualHours: 485, plannedCost: 49000, actualCost: 48500 },
   { month: "Oct", plannedHours: 500, actualHours: 490, plannedCost: 50000, actualCost: 49000 },
 ];
-
+ 
 const activeEmployees = [
-  { name: "John Doe", vId: "V-1001", project: "Alpha", role: "Senior Developer", startDate: "2024-01-15" },
-  { name: "Jane Smith", vId: "V-1002", project: "Beta", role: "UI/UX Designer", startDate: "2024-02-01" },
-  { name: "Mike Johnson", vId: "V-1003", project: "Gamma", role: "DevOps Engineer", startDate: "2024-03-10" },
-  { name: "Sarah Williams", vId: "V-1004", project: "Alpha", role: "QA Lead", startDate: "2024-01-20" },
+  { name: "John Doe", vId: "V-1001", project: "Alpha", role: "Senior Developer", startDate: "2024-01-15", fteLead: "John Smith" },
+  { name: "Jane Smith", vId: "V-1002", project: "Beta", role: "UI/UX Designer", startDate: "2024-02-01", fteLead: "Sarah Johnson" },
+  { name: "Mike Johnson", vId: "V-1003", project: "Gamma", role: "DevOps Engineer", startDate: "2024-03-10", fteLead: "John Smith" },
+  { name: "Sarah Williams", vId: "V-1004", project: "Alpha", role: "QA Lead", startDate: "2024-01-20", fteLead: "John Smith" },
+  { name: "Robert Brown", vId: "V-1005", project: "Delta", role: "Full Stack Developer", startDate: "2024-04-01", fteLead: "Sarah Johnson" },
+  { name: "Emily Davis", vId: "V-1006", project: "Alpha", role: "Data Analyst", startDate: "2024-05-15", fteLead: "John Smith" },
 ];
-
+ 
 const upcomingOnboardings = [
   { candidate: "Robert Brown", project: "Delta", role: "Full Stack Developer", startDate: "2025-11-01", status: "Scheduled" },
   { candidate: "Emily Davis", project: "Epsilon", role: "Data Analyst", startDate: "2025-11-15", status: "Pending Interview" },
   { candidate: "David Wilson", project: "Beta", role: "Frontend Developer", startDate: "2025-12-01", status: "Rate Card Approved" },
 ];
-
-const rateCardSummary = [
-  { project: "Alpha", avgRate: "$85/hr", resources: 12, status: "Active" },
-  { project: "Beta", avgRate: "$78/hr", resources: 8, status: "Active" },
-  { project: "Gamma", avgRate: "$92/hr", resources: 5, status: "Active" },
-  { project: "Delta", avgRate: "$80/hr", resources: 3, status: "Pending" },
-];
-
+ 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
+ 
 export default function VendorDashboard() {
   const location = useLocation();
   const [filters, setFilters] = useState({
@@ -325,19 +434,27 @@ export default function VendorDashboard() {
   const [filteredData, setFilteredData] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("Oct");
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const activeEmployeesRef = useRef<HTMLDivElement>(null);
+  const employeesPerPage = 5;
+  const totalPages = Math.ceil(activeEmployees.length / employeesPerPage);
+  const paginatedEmployees = activeEmployees.slice(
+    (currentPage - 1) * employeesPerPage,
+    currentPage * employeesPerPage
+  );
+ 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get("scroll") === "true") {
       window.scrollTo({ top: 100, behavior: "smooth" });
     }
   }, [location]);
-
+ 
   useEffect(() => {
     const monthData = plannedVsActualData.filter((d) => d.month.toLowerCase() === "oct");
     setFilteredData(monthData);
   }, []);
-
+ 
   const handleMonthChange = (val) => {
     setFilters({ ...filters, month: val });
     if (val === "all") {
@@ -350,7 +467,7 @@ export default function VendorDashboard() {
       setFilteredData(monthData);
     }
   };
-
+ 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -360,13 +477,16 @@ export default function VendorDashboard() {
           <p className="text-muted-foreground mt-1">Overview of your vendor operations</p>
         </div>
       </div>
-
+ 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card
+          onClick={() => activeEmployeesRef.current?.scrollIntoView({ behavior: "smooth" })}
+          className="cursor-pointer hover:bg-muted/50"
+        >
           <CardHeader className="pb-2">
             <CardDescription>Active Employees</CardDescription>
-            <CardTitle className="text-3xl">24</CardTitle>
+            <CardTitle className="text-3xl">{activeEmployees.length}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">Across 4 projects</p>
@@ -400,7 +520,7 @@ export default function VendorDashboard() {
           </CardContent>
         </Card>
       </div>
-
+ 
       {/* Filters */}
       <Card>
         <CardHeader>
@@ -422,6 +542,7 @@ export default function VendorDashboard() {
                   <SelectItem value="alpha">Project Alpha</SelectItem>
                   <SelectItem value="beta">Project Beta</SelectItem>
                   <SelectItem value="gamma">Project Gamma</SelectItem>
+                  <SelectItem value="delta">Project Delta</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -492,7 +613,7 @@ export default function VendorDashboard() {
           </div>
         </CardContent>
       </Card>
-
+ 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
@@ -520,7 +641,7 @@ export default function VendorDashboard() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-
+ 
         <Card>
           <CardHeader>
             <CardTitle>Planned vs Actual Costs ({selectedMonth})</CardTitle>
@@ -547,59 +668,117 @@ export default function VendorDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+ 
+      {/* Employees and Onboardings */}
+      <div className="space-y-6">
+        <Card ref={activeEmployeesRef}>
           <CardHeader>
-            <CardTitle>Active Employees</CardTitle>
+            <CardTitle>Active Employees (Page {currentPage} of {totalPages})</CardTitle>
             <CardDescription>Currently deployed vendor resources</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table className="table-fixed w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>V-ID</TableHead>
-                  <TableHead>Project</TableHead>
-                  <TableHead>Role</TableHead>
+                  <TableHead className="w-[150px]">Name</TableHead>
+                  <TableHead className="w-[100px]">V-ID</TableHead>
+                  <TableHead className="w-[100px]">Project</TableHead>
+                  <TableHead className="w-[150px]">Role</TableHead>
+                  <TableHead className="w-[100px]">Start Date</TableHead>
+                  <TableHead className="w-[100px]">FTE Lead</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {activeEmployees.map((emp) => (
-                  <TableRow key={emp.vId}>
-                    <TableCell className="font-medium">{emp.name}</TableCell>
-                    <TableCell>{emp.vId}</TableCell>
-                    <TableCell>{emp.project}</TableCell>
-                    <TableCell>{emp.role}</TableCell>
+                {paginatedEmployees.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      No employees found
+                    </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  paginatedEmployees.map((emp) => (
+                    <TableRow key={emp.vId} className="hover:bg-muted/50">
+                      <TableCell className="font-medium min-w-0">
+                        <div className="truncate" title={emp.name}>
+                          {emp.name}
+                        </div>
+                      </TableCell>
+                      <TableCell>{emp.vId}</TableCell>
+                      <TableCell className="min-w-0">
+                        <div className="truncate" title={emp.project}>
+                          {emp.project}
+                        </div>
+                      </TableCell>
+                      <TableCell className="min-w-0">
+                        <div className="truncate" title={emp.role}>
+                          {emp.role}
+                        </div>
+                      </TableCell>
+                      <TableCell>{emp.startDate}</TableCell>
+                      <TableCell className="min-w-0">
+                        <div className="truncate" title={emp.fteLead}>
+                          {emp.fteLead}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
+            <div className="flex gap-3 justify-end mt-4">
+              <Button
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </Button>
+            </div>
           </CardContent>
         </Card>
-
+ 
         <Card>
           <CardHeader>
             <CardTitle>Upcoming Onboardings</CardTitle>
             <CardDescription>Scheduled resource onboardings</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
+            <Table className="table-fixed w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Candidate</TableHead>
-                  <TableHead>Project</TableHead>
-                  <TableHead>Start Date</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[150px]">Candidate</TableHead>
+                  <TableHead className="w-[100px]">Project</TableHead>
+                  <TableHead className="w-[100px]">Start Date</TableHead>
+                  <TableHead className="w-[150px]">Role</TableHead>
+                  <TableHead className="w-[150px]">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {upcomingOnboardings.map((onb) => (
-                  <TableRow key={onb.candidate}>
-                    <TableCell className="font-medium">{onb.candidate}</TableCell>
-                    <TableCell>{onb.project}</TableCell>
+                  <TableRow key={onb.candidate} className="hover:bg-muted/50">
+                    <TableCell className="font-medium min-w-0">
+                      <div className="truncate" title={onb.candidate}>
+                        {onb.candidate}
+                      </div>
+                    </TableCell>
+                    <TableCell className="min-w-0">
+                      <div className="truncate" title={onb.project}>
+                        {onb.project}
+                      </div>
+                    </TableCell>
                     <TableCell>{onb.startDate}</TableCell>
+                    <TableCell className="min-w-0">
+                      <div className="truncate" title={onb.role}>
+                        {onb.role}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Badge variant={onb.status === "Scheduled" ? "default" : "secondary"}>
                         {onb.status}
@@ -612,43 +791,10 @@ export default function VendorDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Rate Card Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Rate Card Summary</CardTitle>
-          <CardDescription>Overview of rate cards by project</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Project</TableHead>
-                <TableHead>Average Rate</TableHead>
-                <TableHead>Total Resources</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {rateCardSummary.map((rc) => (
-                <TableRow key={rc.project}>
-                  <TableCell className="font-medium">{rc.project}</TableCell>
-                  <TableCell>{rc.avgRate}</TableCell>
-                  <TableCell>{rc.resources}</TableCell>
-                  <TableCell>
-                    <Badge variant={rc.status === "Active" ? "default" : "secondary"}>
-                      {rc.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
+ 
       {/* Vendor Chatbot */}
       <VendorChatbot isOpen={isChatbotOpen} onClose={setIsChatbotOpen} />
     </div>
   );
 }
+ 
