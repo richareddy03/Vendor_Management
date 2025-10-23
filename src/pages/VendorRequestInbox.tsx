@@ -239,7 +239,7 @@ export default function VendorRequestInbox() {
                   <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.fteLead || "N/A"}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Comments</p>
+                  <p className="text-sm font-medium text-gray-600"></p>
                   <p className="text-base text-gray-900 p-3 bg-white rounded-md">
                     {selectedDetailsRequest?.businessJustification || "N/A"}
                   </p>
