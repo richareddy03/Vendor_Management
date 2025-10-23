@@ -250,14 +250,14 @@ export default function VendorSubmitRatecard({ requestData, onClose }: Props) {
               </div>
 
               <div className="space-y-1">
-                <Label>Proposed Rate (USD/hr) *</Label>
+                <Label>Proposed Cost(USD/hr) *</Label>
                 <Input
                   type="number"
                   value={formData.proposedRate || ""}
                   onChange={(e) =>
                     setFormData({ ...formData, proposedRate: e.target.value })
                   }
-                  placeholder="Enter hourly rate"
+                  placeholder="Enter hourly cost"
                 />
               </div>
 
