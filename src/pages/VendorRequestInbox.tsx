@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, forwardRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, Eye } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import VendorSubmitRatecard from "./VendorSubmitRatecard";
 
-interface Request {
+export interface Request {
   id: string;
   project: string;
   techStack: string;
@@ -20,7 +20,7 @@ interface Request {
   businessJustification: string;
 }
 
-const requestsData: Request[] = [
+export const requestsData: Request[] = [
   {
     id: "REQ-2025-001",
     project: "Alpha",
@@ -71,7 +71,7 @@ const requestsData: Request[] = [
   },
 ];
 
-export default function VendorRequestInbox() {
+const VendorRequestInbox = forwardRef<HTMLDivElement>((props, ref) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showRateCardModal, setShowRateCardModal] = useState(false);
   const [selectedDetailsRequest, setSelectedDetailsRequest] = useState<Request | null>(null);
@@ -89,22 +89,22 @@ export default function VendorRequestInbox() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <Card className="w-full max-w-full relative">
-        <CardHeader>
-          <CardTitle>Resource Requests ({pendingRequests.length})</CardTitle>
-          <CardDescription>Click the eye icon to see details or "Respond" to open the rate card form</CardDescription>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute top-2 right-2"
-            onClick={handleScrollToTop}
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent className="w-full max-w-full">
+    <Card ref={ref} className="w-full max-w-full relative">
+      <CardHeader>
+        <CardTitle>Resource Requests ({pendingRequests.length})</CardTitle>
+        <CardDescription>Click the eye icon to see details or "Respond" to open the rate card form</CardDescription>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute top-2 right-2"
+          onClick={handleScrollToTop}
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="h-4 w-4" />
+        </Button>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="p-6">
           <Table className="table-fixed w-full">
             <TableHeader>
               <TableRow>
@@ -170,8 +170,8 @@ export default function VendorRequestInbox() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </CardContent>
 
       {/* Details Modal */}
       <Dialog open={showDetailsModal} onOpenChange={(open) => {
@@ -179,81 +179,50 @@ export default function VendorRequestInbox() {
         if (!open) setSelectedDetailsRequest(null);
       }}>
         <DialogContent className="sm:max-w-[600px] max-w-[700px] h-[80vh] overflow-y-auto p-6 bg-white rounded-xl shadow-lg">
-          <div className="space-y-4">
-            <Card className="bg-gray-50 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg font-medium text-gray-800">Request Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium text-gray-1000">Request Details</h3>
+              <div className="grid grid-cols-2 gap-5 mt-4">
+                <div className="space-y-2">
                   <p className="text-sm font-medium text-gray-600">Request ID</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.id || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.id || "N/A"}</p>
                 </div>
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">Project</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.project || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.project || "N/A"}</p>
                 </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-gray-50 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg font-medium text-gray-800">Role Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">Tech Stack</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.techStack || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.techStack || "N/A"}</p>
                 </div>
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">Roles Required</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.roles || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.roles || "N/A"}</p>
                 </div>
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">Resources Needed</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.resourcesNeeded ?? "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.resourcesNeeded ?? "N/A"}</p>
                 </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-gray-50 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg font-medium text-gray-800">Date Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">Start Date</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.startDate || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.startDate || "N/A"}</p>
                 </div>
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">End Date</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.endDate || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.endDate || "N/A"}</p>
                 </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-gray-50 shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-lg font-medium text-gray-800">Additional Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-600">FTE Lead</p>
-                  <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.fteLead || "N/A"}</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.fteLead || "N/A"}</p>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600"></p>
-                  <p className="text-base text-gray-900 p-3 bg-white rounded-md">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Comments</p>
+                  <p className="text-base text-gray-900 p-2 bg-white rounded-md">
                     {selectedDetailsRequest?.businessJustification || "N/A"}
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-            {/* <div className="flex justify-end">
-              <Button
-                onClick={() => setShowDetailsModal(false)}
-                className="border border-gray-300 hover:bg-gray-100 text-gray-900 px-6 py-2 rounded-md"
-              >
-                Close
-              </Button>
-            </div> */}
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -270,6 +239,8 @@ export default function VendorRequestInbox() {
           />
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   );
-}
+});
+
+export default VendorRequestInbox;
