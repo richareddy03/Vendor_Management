@@ -239,21 +239,21 @@ export default function VendorRequestInbox() {
                   <p className="text-base font-semibold text-gray-900">{selectedDetailsRequest?.fteLead || "N/A"}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Business Justification</p>
+                  <p className="text-sm font-medium text-gray-600">Comments</p>
                   <p className="text-base text-gray-900 p-3 bg-white rounded-md">
                     {selectedDetailsRequest?.businessJustification || "N/A"}
                   </p>
                 </div>
               </CardContent>
             </Card>
-            <div className="flex justify-end">
+            {/* <div className="flex justify-end">
               <Button
                 onClick={() => setShowDetailsModal(false)}
                 className="border border-gray-300 hover:bg-gray-100 text-gray-900 px-6 py-2 rounded-md"
               >
                 Close
               </Button>
-            </div>
+            </div> */}
           </div>
         </DialogContent>
       </Dialog>

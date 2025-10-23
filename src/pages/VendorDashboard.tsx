@@ -264,9 +264,11 @@ export default function VendorDashboard() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover">
-                  <SelectItem value="all">All Years</SelectItem>
-                  <SelectItem value="lead-1">John Smith</SelectItem>
-                  <SelectItem value="lead-2">Sarah Johnson</SelectItem>
+                  <SelectItem value="all">All Fiscal Years</SelectItem>
+                  <SelectItem value="fy23">FY23</SelectItem>
+                  <SelectItem value="fy24">FY24</SelectItem>
+                  <SelectItem value="fy25">FY25</SelectItem>
+                  <SelectItem value="fy26">FY26</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -592,67 +594,61 @@ export default function VendorDashboard() {
         </Card>
       </div>
 
-      {/* Details Modal */}
-      <Dialog open={showDetailsModal} onOpenChange={(open) => {
+     
+     {/* Details Modal */}
+     <Dialog open={showDetailsModal} onOpenChange={(open) => {
         setShowDetailsModal(open);
         if (!open) setSelectedDetailsRequest(null);
       }}>
-        <DialogContent className="sm:max-w-[600px] max-w-[700px] h-[88vh] overflow-y-auto p-0 bg-white rounded-xl shadow-2xl">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-semibold">Request Details - {selectedDetailsRequest?.id || "N/A"}</DialogTitle>
-            </DialogHeader>
-          </div>
-          <div className="p-6 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Request ID</p>
-                <p className="text-base font-semibold">{selectedDetailsRequest?.id || "N/A"}</p>
+        <DialogContent className="sm:max-w-[600px] max-w-[700px] h-[80vh] overflow-y-auto p-6 bg-white rounded-xl shadow-lg">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-medium text-gray-1000">Request Details</h3>
+              <div className="grid grid-cols-2 gap-5 mt-4">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-600">Request ID</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.id || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Project</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.project || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Tech Stack</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.techStack || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Roles Required</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.roles || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Resources Needed</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.resourcesNeeded ?? "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Start Date</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.startDate || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">End Date</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.endDate || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">FTE Lead</p>
+                  <p className="text-base text-gray-900">{selectedDetailsRequest?.fteLead || "N/A"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-gray-600">Comments</p>
+                  <p className="text-base text-gray-900 p-2 bg-white rounded-md">
+                    {selectedDetailsRequest?.businessJustification || "N/A"}
+                  </p>
+                </div>
               </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Project</p>
-                <p className="text-base font-semibold">{selectedDetailsRequest?.project || "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Tech Stack</p>
-                <p className="text-base">{selectedDetailsRequest?.techStack || "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Roles Required</p>
-                <p className="text-base">{selectedDetailsRequest?.roles || "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Start Date</p>
-                <p className="text-base">{selectedDetailsRequest?.startDate || "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">End Date</p>
-                <p className="text-base">{selectedDetailsRequest?.endDate || "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">Resources Needed</p>
-                <p className="text-base">{selectedDetailsRequest?.resourcesNeeded ?? "N/A"}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-500">FTE Lead</p>
-                <p className="text-base">{selectedDetailsRequest?.fteLead || "N/A"}</p>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-500">Business Justification</p>
-              <p className="text-base bg-gray-50 p-3 rounded-lg">{selectedDetailsRequest?.businessJustification || "N/A"}</p>
-            </div>
-            <div className="flex justify-end">
-              <Button
-                onClick={() => setShowDetailsModal(false)}
-                className="bg-blue-500 hover:bg-blue-600 text-white"
-              >
-                Close
-              </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
+ 
 
       {/* Rate Card Modal */}
       <Dialog open={showRateCardModal} onOpenChange={(open) => {
