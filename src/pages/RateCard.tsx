@@ -800,7 +800,7 @@ export default function RateCard() {
                 <tr className="border-b border-border">
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Candidate</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Role</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Proposed Rate</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Proposed Cost</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Vendor</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Project</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground min-w-0">Profile</th>
@@ -900,7 +900,7 @@ export default function RateCard() {
         <DialogContent className="max-w-2xl max-h-[70vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Candidate Profile</DialogTitle>
-            <DialogDescription>Complete profile details for review</DialogDescription>
+            {/* <DialogDescription>Complete profile details for review</DialogDescription> */}
           </DialogHeader>
           {selectedCandidate && (
             <div className="space-y-4">
@@ -918,7 +918,7 @@ export default function RateCard() {
                   <p className="text-base text-foreground">{selectedCandidate.vendor}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Proposed Rate</p>
+                  <p className="text-sm font-medium text-muted-foreground">Proposed Cost</p>
                   <p className="text-base font-semibold text-primary">{selectedCandidate.proposedRate}</p>
                 </div>
                 <div>
@@ -951,7 +951,7 @@ export default function RateCard() {
                 <p className="text-base text-foreground">{selectedCandidate.techStack}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground mb-1">Business Justification</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">Comments</p>
                 <p className="text-base text-foreground">{selectedCandidate.justification}</p>
               </div>
               <div>
