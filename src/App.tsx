@@ -26,6 +26,7 @@ import VendorScheduleInterview from "./pages/VendorScheduleInterview";
 import VendorSubmitRatecard from "./pages/VendorSubmitRatecard";
 import VendorOffboarding from "./pages/VendorOffboarding";
 import VendorDashboard from "./pages/VendorDashboard";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route element={<MainLayout />}>
+          <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/replacement" element={<Replacement />} />
@@ -57,7 +58,7 @@ const App = () => (
             <Route path="/vendor-offboarding-request" element={<VendorOffboarding />} />
             <Route path="/vendor-request-inbox" element={<VendorRequestInbox />} />
             <Route path="/vendor-schedule-interview" element={<VendorScheduleInterview />} />
-            <Route path="/vendor-submit-ratecard" element={<VendorSubmitRatecard />} />
+            {/* <Route path="/vendor-submit-ratecard" element={<VendorSubmitRatecard />} /> */}
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -67,3 +68,4 @@ const App = () => (
 );
 
 export default App;
+

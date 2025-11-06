@@ -1,62 +1,108 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMsal, useIsAuthenticated } from "@azure/msal-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { loginRequest } from "@/authConfig";
 
 export default function Login() {
+  const { instance, accounts } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [error, setError] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const API_URL = "https://vendorfunctionapp-b9asdzfwcreyhgf0.eastus-01.azurewebsites.net/api/verifyUser";
 
   const handleAzureLogin = () => {
-    // Mock Azure AD login flow
-    const mockUser = {
-      username: "azureuser",
-      role: "fte-lead",
-      name: "VMS User"
-    };
-    localStorage.setItem("vomsUser", JSON.stringify(mockUser));
-    toast.success("Redirecting to Azure AD Sign-In...");
-    setTimeout(() => {
-      const destination = mockUser.role === "business-desk" ? "/business-dashboard" :
-                         mockUser.role === "vendor" ? "/vendor-dashboard" : "/dashboard";
-      navigate(destination);
-    }, 1500);
+    instance.loginRedirect(loginRequest).catch((e) => {
+      console.error("Login failed:", e);
+      toast.error("Azure AD login failed. Please try again.");
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  // useEffect(() => {
+  //   if (isAuthenticated && accounts[0]) {
+  //     acquireTokenAndVerifyUser();
+  //   }
+  // }, [isAuthenticated, accounts]);
 
-    if (!username || !password || !role) {
-      setError("All fields are required");
-      return;
+ useEffect(() => {
+  // Prevent auto-login after logout
+  const justLoggedOut = sessionStorage.getItem("justLoggedOut");
+  if (justLoggedOut) {
+    sessionStorage.removeItem("justLoggedOut");
+    return;
+  }
+
+  if (isAuthenticated && accounts[0]) {
+    acquireTokenAndVerifyUser();
+  }
+}, [isAuthenticated, accounts]);
+
+
+  const acquireTokenAndVerifyUser = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+
+    try {
+      const tokenResponse = await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0],
+      });
+
+      const idToken = tokenResponse.idToken;
+
+      const apiResponse = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!apiResponse.ok) {
+        const errorText = await apiResponse.text();
+        throw new Error(`Backend error: ${apiResponse.status} - ${errorText}`);
+      }
+
+      const data = await apiResponse.json();
+
+      if (data.status !== "success") {
+        throw new Error(data.message || "Verification failed");
+      }
+
+      // Store exactly what backend sends
+      const user = {
+        userId: data.userId,      // ← From DB (GUID)
+        name: data.name,
+        email: data.email,
+        role: data.role.toLowerCase().replace(" ", "-"),
+      };
+
+      localStorage.setItem("vmsUser", JSON.stringify(user));
+
+      toast.success(`Welcome, ${user.name.split(" ")[0]}!`, { duration: 2000 });
+      
+      const roleToPath: Record<string, string> = {
+  "vendor": "/vendor-dashboard",
+  "fte-lead": "/dashboard",
+  "business-desk": "/business-dashboard",
+};
+
+const redirectPath = roleToPath[user.role] || "/dashboard";
+navigate(redirectPath);
+
+      // setTimeout(() => {
+      //   navigate(data.redirect);
+      // }, 800);
+    } catch (error: any) {
+      console.error("Token verification failed:", error);
+      toast.error(error.message || "Authentication failed.");
+    } finally {
+      setIsProcessing(false);
     }
-
-    // Mock validation - accept any username/password for demo
-    const user = {
-      username,
-      role,
-      name: username.charAt(0).toUpperCase() + username.slice(1)
-    };
-    localStorage.setItem("vomsUser", JSON.stringify(user));
-    toast.success("Login successful!",{duration:1000});
-    const destination = role === "business-desk" ? "/business-dashboard" :
-                       role === "vendor" ? "/vendor-dashboard" : "/dashboard";
-    navigate(destination);
   };
 
   return (
@@ -67,93 +113,49 @@ export default function Login() {
             <span className="text-2xl font-bold text-primary-foreground">V</span>
           </div>
           <CardTitle className="text-2xl">Vendor Management System</CardTitle>
-          <CardDescription>Sign in to access your VMS dashboard</CardDescription>
+          <CardDescription>Sign in with your Microsoft Azure AD account</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* Azure AD Login */}
           <Button
             type="button"
             variant="outline"
             className="w-full h-12 text-base border-2 hover:bg-accent"
             onClick={handleAzureLogin}
+            disabled={isProcessing}
           >
-            <svg className="mr-2 h-5 w-5" viewBox="0 0 23 23" fill="none">
-              <path d="M0 0h10.76v10.76H0zm12.24 0H23v10.76H12.24zM0 12.24h10.76V23H0zm12.24 0H23V23H12.24z" fill="#F25022"/>
-              <path d="M12.24 0H23v10.76H12.24z" fill="#7FBA00"/>
-              <path d="M0 12.24h10.76V23H0z" fill="#00A4EF"/>
-              <path d="M12.24 12.24H23V23H12.24z" fill="#FFB900"/>
-            </svg>
-            Sign in with Microsoft Azure AD
+            {isProcessing ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Signing in...
+              </>
+            ) : (
+              <>
+                <svg className="mr-2 h-5 w-5" viewBox="0 0 23 23" fill="none">
+                  <path d="M0 0h10.76v10.76H0zm12.24 0H23v10.76H12.24zM0 12.24h10.76V23H0zm12.24 0H23V23H12.24z" fill="#F25022"/>
+                  <path d="M12.24 0H23v10.76H12.24z" fill="#7FBA00"/>
+                  <path d="M0 12.24h10.76V23H0z" fill="#00A4EF"/>
+                  <path d="M12.24 12.24H23V23H12.24z" fill="#FFB900"/>
+                </svg>
+                Sign in with Microsoft Azure AD
+              </>
+            )}
           </Button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or continue with credentials</span>
-            </div>
+          <div className="text-center text-sm text-muted-foreground">
+            Only authorized users can access the VMS dashboard.
           </div>
-
-          {/* Manual Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                aria-label="Username"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-label="Password"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger id="role" aria-label="Select role">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover">
-                  <SelectItem value="fte-lead">FTE Lead / Manager</SelectItem>
-                  <SelectItem value="business-desk">Business Desk</SelectItem>
-                  <SelectItem value="vendor">Vendor</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Button type="submit" className="w-full">
-              Sign In
-            </Button>
-          </form>
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-2 text-sm text-center">
           <a href="#" className="text-primary hover:underline">
-            Forgot Password?
+            Having trouble signing in?
           </a>
           <a href="#" className="text-muted-foreground hover:text-foreground">
-            Contact Admin for Support
+            Contact your administrator
           </a>
         </CardFooter>
       </Card>
